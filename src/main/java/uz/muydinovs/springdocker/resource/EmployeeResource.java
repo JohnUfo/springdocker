@@ -37,8 +37,8 @@ public class EmployeeResource {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@Validated @RequestBody Employee employee) {
-        Employee newEmployee = employeeService.addEmployee(employee);
-        return ResponseEntity.created(getLocation(newEmployee.getId())).body(newEmployee);
+        Employee employee1 = employeeService.addEmployee(employee);
+        return ResponseEntity.created(getLocation(employee1.getId())).body(employee1);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

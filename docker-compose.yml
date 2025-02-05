@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgresdb:
+    container_name: postgrescontainerforapp
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: spring_docker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2373
+    networks:
+      - apinetwork
+
+  apiapplication:
+    container_name: apiapplicationcontainer
+    build: .
+    image: apiapplication:v1
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:5432/spring_docker
+      SPRING_DATASOURCE_USERNAME: 'postgres'
+      SPRING_DATASOURCE_PASSWORD: '2373'
+    depends_on:
+      - postgresdb
+    networks:
+      - apinetwork
+
+networks:
+  apinetwork:
+    driver: bridge
