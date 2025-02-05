@@ -20,9 +20,10 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         if (authentication.getCredentials() == null || userDetails.getPassword() == null) {
-            throw new BadCredentialsException("Credentials amy not be null");
+            throw new BadCredentialsException("Credentials may not be null");
         }
-        if (passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
+
+        if (!passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
             throw new BadCredentialsException("Invalid credentials");
         }
     }

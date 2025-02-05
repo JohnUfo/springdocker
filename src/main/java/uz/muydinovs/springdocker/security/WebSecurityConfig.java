@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -24,7 +25,7 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/employees", "/accounts").permitAll()
+                        .requestMatchers(POST, "/employees", "/accounts").permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN")
                 )
                 .httpBasic(withDefaults())
