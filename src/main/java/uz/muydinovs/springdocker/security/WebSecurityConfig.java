@@ -16,11 +16,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @EnableWebSecurity
 @Configuration
-@RequiredArgsConstructor
 @EnableMethodSecurity
 public class WebSecurityConfig {
-
-    private final AccountAuthenticationProvider accountAuthenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
