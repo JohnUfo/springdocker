@@ -2,6 +2,7 @@ package uz.muydinovs.springdocker.resource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uz.muydinovs.springdocker.model.Employee;
@@ -33,13 +34,13 @@ public class EmployeeResource {
     }
 
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Employee> createEmployee(@Validated @RequestBody Employee employee) {
         Employee newEmployee = employeeService.addEmployee(employee);
         return ResponseEntity.created(getLocation(newEmployee.getId())).body(newEmployee);
     }
 
     @PutMapping
-    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Employee> updateEmployee(@Validated @RequestBody Employee employee) {
         Employee updatedEmployee = employeeService.updateEmployee(employee);
         return updatedEmployee != null ? ResponseEntity.ok(updatedEmployee) : ResponseEntity.notFound().build();
     }

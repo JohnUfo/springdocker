@@ -25,7 +25,7 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(POST, "/employees", "/accounts").permitAll()
+                        .requestMatchers(POST, "/accounts/**").permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN")
                 )
                 .httpBasic(withDefaults())

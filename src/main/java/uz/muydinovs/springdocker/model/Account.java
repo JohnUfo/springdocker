@@ -3,6 +3,7 @@ package uz.muydinovs.springdocker.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,9 +22,11 @@ public class Account {
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @NotNull
     private String username;
 
     @JsonProperty(access = WRITE_ONLY)
+    @NotNull
     private String password;
 
     private boolean enabled = true;
