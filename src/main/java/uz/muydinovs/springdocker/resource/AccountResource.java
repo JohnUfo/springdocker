@@ -20,7 +20,7 @@ public class AccountResource {
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody Account account) {
         Account newAccount = accountService.createAccount(account);
-        return ResponseEntity.created(getLocation(newAccount.getId().intValue())).body(newAccount);
+        return ResponseEntity.created(getLocation(newAccount.getId())).body(newAccount);
     }
 
     @GetMapping

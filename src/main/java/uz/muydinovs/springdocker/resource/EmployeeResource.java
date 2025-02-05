@@ -21,7 +21,7 @@ public class EmployeeResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable Integer id) {
+    public ResponseEntity<Employee> getEmployee(@PathVariable Long id) {
         Employee employee = employeeService.getEmployeeById(id);
         return employee != null ? ResponseEntity.ok(employee) : ResponseEntity.notFound().build();
     }
@@ -45,12 +45,12 @@ public class EmployeeResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         boolean deleted = employeeService.deleteEmployeeById(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
-    public static URI getLocation(Integer id) {
+    public static URI getLocation(Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
     }
 }

@@ -1,39 +1,38 @@
 package uz.muydinovs.springdocker.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.FetchType.EAGER;
-
+@Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@ToString(exclude = "roles")
 public class Account {
     @Id
-    @GeneratedValue
-    public Long id;
-    @Column(unique = true)
-    public String username;
-    public String password;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
     private boolean enabled = true;
     private boolean credentialExpired = false;
     private boolean expired = false;
     private boolean locked = false;
 
-    @ManyToMany(fetch = EAGER, cascade = ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "AccountRole",
-            joinColumns = @JoinColumn(name = "accountId", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "roleId", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "accountId"),
+            inverseJoinColumns = @JoinColumn(name = "roleId")
     )
     private Set<Role> roles = new HashSet<>();
 }

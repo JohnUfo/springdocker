@@ -22,7 +22,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getEmployeeById(Integer id) {
+    public Employee getEmployeeById(Long id) {
         return employeeRepository.findById(id).orElse(null);
     }
 
@@ -38,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public boolean deleteEmployeeById(Integer id) {
+    public boolean deleteEmployeeById(Long id) {
         try {
             employeeRepository.deleteById(id);
             return true;

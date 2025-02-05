@@ -2,39 +2,39 @@ package uz.muydinovs.springdocker.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @EnableWebSecurity
+@Configuration
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
     private final AccountAuthenticationProvider accountAuthenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(accountAuthenticationProvider);
-        http.csrf().disable();
-        http.authorizeRequests()
-                .requestMatchers(POST, "/employees").permitAll();
-        http.authorizeRequests()
-                .anyRequest()
-                .hasAnyRole("USER", "ADMIN")
-                .and()
+        http
+                .csrf().disable()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/employees", "/accounts").permitAll()
+                        .anyRequest().hasAnyRole("USER", "ADMIN")
+                )
                 .httpBasic(withDefaults())
-                .sessionManagement()
-                .sessionCreationPolicy(STATELESS);
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
+
         return http.build();
     }
 
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
 }
