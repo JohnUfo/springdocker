@@ -21,6 +21,7 @@ public class Account {
     @Id
     @GeneratedValue
     public Long id;
+    @Column(unique = true)
     public String username;
     public String password;
     private boolean enabled = true;
