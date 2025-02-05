@@ -2,6 +2,7 @@ package uz.muydinovs.springdocker.resource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -33,12 +34,14 @@ public class EmployeeResource {
         return employees.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(employees);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@Validated @RequestBody Employee employee) {
         Employee newEmployee = employeeService.addEmployee(employee);
         return ResponseEntity.created(getLocation(newEmployee.getId())).body(newEmployee);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping
     public ResponseEntity<Employee> updateEmployee(@Validated @RequestBody Employee employee) {
         Employee updatedEmployee = employeeService.updateEmployee(employee);

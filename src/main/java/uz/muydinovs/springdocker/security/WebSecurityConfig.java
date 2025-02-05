@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,6 +17,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     private final AccountAuthenticationProvider accountAuthenticationProvider;
@@ -26,8 +28,8 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(POST, "/accounts/**").permitAll()
-                        .anyRequest().hasAnyRole("USER", "ADMIN")
-                )
+                        .requestMatchers(POST, "/**").authenticated()
+                        .anyRequest().hasAnyRole("USER", "ADMIN"))
                 .httpBasic(withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS));
 
