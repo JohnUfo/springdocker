@@ -1,18 +1,25 @@
 package uz.muydinovs.springdocker.resource;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uz.muydinovs.springdocker.model.Employee;
 import uz.muydinovs.springdocker.service.EmployeeService;
 
+import java.net.URI;
 import java.util.List;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/employee")
 public class EmployeeResource {
+
     private final EmployeeService employeeService;
+
+    public EmployeeResource(@Qualifier(value = "postgresEmployeeService") EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployee(@PathVariable Integer id) {
@@ -28,8 +35,11 @@ public class EmployeeResource {
 
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        Employee createdEmployee = employeeService.addEmployee(employee);
-        return ResponseEntity.ok(createdEmployee);
+        return ResponseEntity.created(getLocation(employee.getId())).body(employeeService.addEmployee(employee));
+    }
+
+    private URI getLocation(Integer id) {
+        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
     }
 
     @PutMapping

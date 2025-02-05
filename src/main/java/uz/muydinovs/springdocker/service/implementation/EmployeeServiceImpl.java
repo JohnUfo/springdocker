@@ -1,6 +1,7 @@
 package uz.muydinovs.springdocker.service.implementation;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import uz.muydinovs.springdocker.model.Employee;
 import uz.muydinovs.springdocker.repository.EmployeeRepository;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Qualifier(value = "postgresEmployeeService")
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
