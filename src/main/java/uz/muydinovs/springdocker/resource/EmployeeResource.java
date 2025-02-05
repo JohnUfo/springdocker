@@ -1,6 +1,5 @@
 package uz.muydinovs.springdocker.resource;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/employees")
 public class EmployeeResource {
 
     private final EmployeeService employeeService;
@@ -35,11 +34,8 @@ public class EmployeeResource {
 
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        return ResponseEntity.created(getLocation(employee.getId())).body(employeeService.addEmployee(employee));
-    }
-
-    private URI getLocation(Integer id) {
-        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
+        Employee newEmployee = employeeService.addEmployee(employee);
+        return ResponseEntity.created(getLocation(newEmployee.getId())).body(newEmployee);
     }
 
     @PutMapping
@@ -52,5 +48,9 @@ public class EmployeeResource {
     public ResponseEntity<Void> deleteEmployee(@PathVariable Integer id) {
         boolean deleted = employeeService.deleteEmployeeById(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    public static URI getLocation(Integer id) {
+        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
     }
 }
